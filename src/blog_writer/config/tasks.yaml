@@ -1,0 +1,66 @@
+# src/blog_writer/config/tasks.yaml
+
+topic_analysis_task:
+  description: >
+    Analyze the primary blog post topic: '{topic}' with the desired writing tone: '{tone}'.
+    Identify 3-5 key sub-topics or themes that should be covered in the blog post.
+    Create a structured outline consisting ONLY of these sub-topics, formatted as H2 level headings.
+    Consider the specified tone to adjust the complexity or angle of the sub-topics.
+  expected_output: >
+    A Python list of strings, where each string is a concise H2 heading representing a sub-topic
+    for the blog post structure.
+    Example format: ['Understanding Python's Role in AI', 'Key Python Libraries for AI Applications', 'Setting Up Your Python AI Environment', 'Future Trends of Python in AI']
+  agent: topic_analyzer
+
+research_task:
+  description: >
+    Conduct thorough research on the main topic '{topic}' and the specific sub-topics provided
+    in the context (from the topic_analysis_task).
+    1. Use the News Search Tool (NewsData.io) to find 2-3 recent (within the last year, considering it's 2025) news summaries or updates relevant to '{topic}'.
+    2. Use the Keyword Finder Tool (Datamuse) to generate a list of 10-15 semantic keyword variations related to '{topic}' and its sub-topics.
+    Compile all findings into a single, structured text block.
+  expected_output: >
+    A single string containing a well-organized compilation of the research findings.
+    The string should clearly section the News Summaries and Keywords List.
+    Example structure:
+    "**Recent News:**\n- Summary 1...\n- Summary 2...\n\n**Keywords:**\n- keyword1, keyword2, ..."
+  agent: researcher
+  context:
+    - topic_analysis_task
+  tools: # Will be passed in crew.py
+
+writing_task:
+  description: >
+    Write a complete, high-quality blog post about '{topic}' using the specified tone '{tone}'.
+    1. Use the outline (list of H2 headings) provided in the context from topic_analysis_task.
+    2. Integrate the research findings (news summaries, keywords) provided in the context from research_task naturally and appropriately within the content.
+    3. Write an engaging introduction (~100-150 words).
+    4. Develop each section under its corresponding H2 heading with detailed content (~200-300 words each). Use paragraphs, bullet points, and other Markdown formatting as needed for clarity.
+    5. Write a strong conclusion summarizing the key points and including a relevant call-to-action.
+    6. Ensure the entire output is ONLY the blog post content, formatted strictly and exclusively in Markdown. Do not include any preamble or extra text outside the Markdown content.
+  expected_output: >
+    A single string containing the full blog post content, formatted entirely in Markdown.
+    The output must start directly with the first line of the Markdown (e.g., the H1 title or intro paragraph)
+    and end with the last line of the Markdown (e.g., the conclusion). No surrounding text.
+  agent: writer
+  context:
+    - topic_analysis_task
+    - research_task
+
+seo_optimization_task:
+  description: >
+    Analyze the final blog post content (provided in context from writing_task) for the topic '{topic}'.
+    Generate the following SEO metadata elements based on the content and potential keyword context:
+    1.  Optimized Title: A compelling title for the blog post (string).
+    2.  Meta Description: A concise summary for search engines (string, **strictly maximum 160 characters**).
+    3.  Tags/Keywords: A list of relevant tags or keywords (list of strings).
+    4.  Suggested URL Slug: A short, URL-friendly version of the title in kebab-case (string).
+    Present the output as a JSON object string.
+  expected_output: >
+    A JSON string representing a dictionary containing the SEO metadata.
+    The keys must be exactly: "title", "meta_description", "tags" (value should be a list of strings), and "slug".
+    Example format:
+    '{{"title": "How Python Dominates AI in 2025: Libraries & Trends", "meta_description": "Discover Python's crucial role in AI, top libraries like TensorFlow & PyTorch, setup guides, and future trends. Essential reading for AI enthusiasts in 2025.", "tags": ["python", "ai", "artificial intelligence", "machine learning", "deep learning", "python libraries", "ai trends 2025"], "slug": "python-dominates-ai-2025-libraries-trends"}}'
+  agent: seo_optimizer
+  context:
+    - writing_task
