@@ -1,0 +1,16 @@
+{
+  "title": "Async Python: Boost Performance with asyncio",
+  "meta_description": "Master async programming in Python with asyncio! Learn about coroutines, event loops, and boost I/O performance. Includes code examples.",
+  "tags": [
+    "asyncio",
+    "python async",
+    "async programming",
+    "coroutines",
+    "event loop",
+    "concurrency",
+    "non-blocking I/O"
+  ],
+  "slug": "async-python-asyncio-performance",
+  "estimated_reading_time_minutes": 6,
+  "flesch_reading_ease_score": 30.97
+}
