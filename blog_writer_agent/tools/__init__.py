@@ -1,12 +1,6 @@
 # src/blog_writer/tools/__init__.py
+from .news_tool import search_news
+from .datamuse_tool import find_keywords
 
-# Import the tool classes
-from .news_tool import NewsSearchTool
-from .datamuse_tool import DatamuseTool
-
-# Instantiate the tools for use in the crew
-news_tool = NewsSearchTool()
-datamuse_tool = DatamuseTool()
-
-# Define an __all__ for explicit exports
-__all__ = ['news_tool', 'datamuse_tool', 'NewsSearchTool', 'DatamuseTool']
+# Export the functions directly
+__all__ = ['search_news', 'find_keywords']

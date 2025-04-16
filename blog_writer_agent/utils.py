@@ -5,7 +5,7 @@ from pathlib import Path
 import textstat  # For readability score 
 
 # Directory to store outputs
-OUTPUT_DIR = Path().cwd().parent / "outputs"
+OUTPUT_DIR = Path().cwd() / "outputs"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 def calculate_reading_time(text: str) -> int:
