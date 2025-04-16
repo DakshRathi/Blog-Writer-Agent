@@ -33,6 +33,12 @@ The system features both a Command-Line Interface (CLI) and an interactive Strea
 *   **Session Management (Streamlit):** Supports multiple, renameable chat sessions.
 *   **Modular Design:** Codebase organized into distinct modules for agents, tasks, tools, and utilities.
 
+## 🎬 Demonstration Video
+
+Watch a quick demonstration of the AI Blog Writer Agent in action, showcasing both the CLI and Streamlit interfaces:
+
+📽️ [Watch the Demo Video](https://drive.google.com/file/d/1FUu5fjZbf302vp2Vu2jLAPO61ZX_M2kv/view?usp=sharing)
+
 ## 📂 Project Structure
 ```
 └── 📁blog-writer-agent
