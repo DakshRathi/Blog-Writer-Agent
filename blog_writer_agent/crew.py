@@ -34,8 +34,6 @@ class BlogWriterCrew:
         return Agent(
             config=self.agents_config['topic_analyzer'],
             llm=self.llm,
-            allow_delegation=False,
-            verbose=True
         )
 
     @agent
@@ -44,8 +42,6 @@ class BlogWriterCrew:
             config=self.agents_config['researcher'],
             tools=[search_news, find_keywords],
             llm=self.llm,
-            allow_delegation=False,
-            verbose=True
         )
 
     @agent
@@ -61,12 +57,7 @@ class BlogWriterCrew:
     def seo_optimizer(self) -> Agent:
         return Agent(
             config=self.agents_config['seo_optimizer'],
-            # SEO agent might use Datamuse again for keyword ideas, or just analyze content
-            # Assigning it based on potential utility, even if task description focuses on content analysis
-            tools=[find_keywords],
             llm=self.llm,
-            allow_delegation=False,
-            verbose=True
         )
 
     # --- Task Definitions ---
@@ -93,7 +84,6 @@ class BlogWriterCrew:
     def seo_optimization_task(self) -> Task:
         return Task(
             config=self.tasks_config['seo_optimization_task'],
-            tools=[find_keywords],
         )
 
     # --- Crew Assembly ---
