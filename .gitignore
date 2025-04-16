@@ -1,5 +1,4 @@
 __pycache__/
-outputs/
 *.pyc
 .env
 .DS_Store
