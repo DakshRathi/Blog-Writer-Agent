@@ -1,0 +1,6 @@
+crewai==0.114.0
+httpx==0.27.2
+python-dotenv==1.1.0
+streamlit==1.44.0
+textstat==0.7.5
+asyncio==3.4
