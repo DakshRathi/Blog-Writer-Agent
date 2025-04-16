@@ -2,46 +2,49 @@
 
 topic_analysis_task:
   description: >
-    Analyze the primary blog post topic: '{topic}' with the desired writing tone: '{tone}'.
-    Identify 3-5 key sub-topics or themes that should be covered in the blog post.
-    Create a structured outline consisting ONLY of these sub-topics, formatted as H2 level headings.
-    Consider the specified tone to adjust the complexity or angle of the sub-topics.
+    Perform a strategic analysis of the blog post topic: '{topic}' with the desired writing tone: '{tone}'.
+    1. Identify the most likely **Target Audience** (e.g., 'Technical Beginners', 'Marketing Professionals', 'General Consumers').
+    2. Define a single, concise **Key Takeaway Message** the reader should remember.
+    3. Develop a logical outline of 3-5 **Engaging H2 Sub-headings** that cover the topic comprehensively for the identified audience.
+    Structure the output as a JSON string containing keys: "target_audience", "key_takeaway", and "outline_headings" (list of strings).
   expected_output: >
-    A Python list of strings, where each string is a concise H2 heading representing a sub-topic
-    for the blog post structure.
-    Example format: ['Understanding Python's Role in AI', 'Key Python Libraries for AI Applications', 'Setting Up Your Python AI Environment', 'Future Trends of Python in AI']
+    A JSON string representing a dictionary with the analysis results.
+    Example:
+    '{{"target_audience": "Beginners interested in AI", "key_takeaway": "Generative AI offers accessible tools that can enhance creativity and productivity in everyday life.", "outline_headings": ["What Exactly is Generative AI?", "Fun Ways AI Can Boost Your Creativity", "Making Daily Chores Easier with AI", "Cool AI Tools You Can Try Today", "The Friendly Future with AI"]}}'
   agent: topic_analyzer
 
 research_task:
   description: >
-    Conduct thorough research on the main topic '{topic}' and the specific sub-topics provided
-    in the context (from the topic_analysis_task).
-    1. Use the News Search Tool (NewsData.io) to find 2-3 recent (within the last year, considering it's 2025) news summaries or updates relevant to '{topic}'.
-    2. Use the Keyword Finder Tool (Datamuse) to generate a list of 10-15 semantic keyword variations related to '{topic}' and its sub-topics.
-    Compile all findings into a single, structured text block.
+    Conduct targeted research for the blog post on '{topic}'.
+    Use the context provided by the 'topic_analysis_task' to understand the specific **sub-topics (outline_headings)** and the identified **target_audience**.
+    1. Using the News Search Tool, find 2-3 recent (2024-2025, or relevant historical context if appropriate for the topic) and highly relevant news updates related to '{topic}'. Briefly summarize each and explain its significance.
+    2. Using the Keyword Finder Tool, generate a list of 10-15 relevant semantic keywords and phrases, considering search intent for the **target_audience identified in the context**.
+    Compile these findings into a clearly structured report using Markdown headings (### News Highlights, ### Relevant Keywords). Ensure conciseness and relevance.
   expected_output: >
-    A single string containing a well-organized compilation of the research findings.
-    The string should clearly section the News Summaries and Keywords List.
-    Example structure:
-    "**Recent News:**\n- Summary 1...\n- Summary 2...\n\n**Keywords:**\n- keyword1, keyword2, ..."
+    A single string containing the structured research report.
+    Example format:
+    "### News Highlights\n- **Article 1 Title (Date):** Summary explaining relevance...\n- **Article 2 Title (Date):** Summary explaining relevance...\n\n### Relevant Keywords\n- keyword1\n- keyword 2\n..."
   agent: researcher
   context:
     - topic_analysis_task
-  tools: # Will be passed in crew.py
 
 writing_task:
   description: >
-    Write a complete, high-quality blog post about '{topic}' using the specified tone '{tone}'.
-    1. Use the outline (list of H2 headings) provided in the context from topic_analysis_task.
-    2. Integrate the research findings (news summaries, keywords) provided in the context from research_task naturally and appropriately within the content.
-    3. Write an engaging introduction (~100-150 words).
-    4. Develop each section under its corresponding H2 heading with detailed content (~200-300 words each). Use paragraphs, bullet points, and other Markdown formatting as needed for clarity.
-    5. Write a strong conclusion summarizing the key points and including a relevant call-to-action.
-    6. Ensure the entire output is ONLY the blog post content, formatted strictly and exclusively in Markdown. Do not include any preamble or extra text outside the Markdown content.
+    Write a complete, high-quality, and engaging blog post about '{topic}' using a professional '{tone}'.
+    **Reference the context from 'topic_analysis_task' extensively:**
+    1.  Write specifically for the **target_audience identified in the context**.
+    2.  Structure the post precisely using the **H2 outline_headings provided in the context**.
+    **Strictly follow these instructions:**
+    3.  Address the needs and understanding level of the target audience.
+    4.  Naturally integrate insights from the 'research_task' context (news relevance, keywords). Avoid forced keyword stuffing; aim for organic inclusion.
+    5.  Craft a compelling introduction that grabs attention and clearly states the post's purpose.
+    6.  Develop each section (~250-350 words) with valuable information, ensuring logical flow and smooth transitions. Use varied sentence structures.
+    7.  Subtly incorporate the **key_takeaway message identified in the context** throughout the post and emphasize it in the conclusion.
+    8.  Use Markdown formatting (bold, lists, etc.) to enhance readability. Proofread carefully for grammar and spelling errors.
+    9.  Conclude with a strong summary and a clear, relevant call-to-action.
+    **CRITICAL: The output MUST be the blog post content ONLY, formatted strictly in Markdown. NO introduction like "Here is the blog post:", comments, or any other text.**
   expected_output: >
-    A single string containing the full blog post content, formatted entirely in Markdown.
-    The output must start directly with the first line of the Markdown (e.g., the H1 title or intro paragraph)
-    and end with the last line of the Markdown (e.g., the conclusion). No surrounding text.
+    A single string containing the full, well-structured, and engaging blog post in Markdown format, ready for publishing. Starts with the H1 or first paragraph, ends with the last line of the conclusion/CTA.
   agent: writer
   context:
     - topic_analysis_task
@@ -49,18 +52,18 @@ writing_task:
 
 seo_optimization_task:
   description: >
-    Analyze the final blog post content (provided in context from writing_task) for the topic '{topic}'.
-    Generate the following SEO metadata elements based on the content and potential keyword context:
-    1.  Optimized Title: A compelling title for the blog post (string).
-    2.  Meta Description: A concise summary for search engines (string, **strictly maximum 160 characters**).
-    3.  Tags/Keywords: A list of relevant tags or keywords (list of strings).
-    4.  Suggested URL Slug: A short, URL-friendly version of the title in kebab-case (string).
-    Present the output as a JSON object string.
+    Analyze the final blog post content (from 'writing_task' context) for '{topic}'.
+    Generate optimized SEO metadata designed for maximum search visibility and click-through rate (CTR).
+    1.  **Title:** Craft a compelling, SEO-friendly title (ideally under 60 chars).
+    2.  **Meta Description:** Write an engaging meta description (MAX 160 chars) summarizing the value and encouraging clicks.
+    3.  **Tags/Keywords:** Identify and list 5-7 highly relevant tags/keywords based on content and research context.
+    4.  **URL Slug:** Create a short, descriptive, lowercase, kebab-case URL slug.
+    **Output Format:** Return ONLY a valid JSON string containing the keys "title", "meta_description", "tags" (list of strings), and "slug".
   expected_output: >
-    A JSON string representing a dictionary containing the SEO metadata.
-    The keys must be exactly: "title", "meta_description", "tags" (value should be a list of strings), and "slug".
-    Example format:
-    '{{"title": "How Python Dominates AI in 2025: Libraries & Trends", "meta_description": "Discover Python's crucial role in AI, top libraries like TensorFlow & PyTorch, setup guides, and future trends. Essential reading for AI enthusiasts in 2025.", "tags": ["python", "ai", "artificial intelligence", "machine learning", "deep learning", "python libraries", "ai trends 2025"], "slug": "python-dominates-ai-2025-libraries-trends"}}'
+    A JSON string representing the optimized SEO metadata.
+    Example:
+    '{{"title": "Generative AI in Daily Life: Easy Tools & Tips (2025)", "meta_description": "Discover how friendly Generative AI tools can boost your creativity and simplify everyday tasks. Learn easy ways to get started with AI today!", "tags": ["generative ai", "ai tools", "everyday ai", "ai productivity", "creative ai", "beginner ai guide", "ai trends 2025"], "slug": "generative-ai-daily-life-tools-tips"}}'
   agent: seo_optimizer
   context:
     - writing_task
+    - research_task

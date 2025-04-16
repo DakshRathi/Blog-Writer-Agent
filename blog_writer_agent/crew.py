@@ -74,36 +74,26 @@ class BlogWriterCrew:
     def topic_analysis_task(self) -> Task:
         return Task(
             config=self.tasks_config['topic_analysis_task'],
-            agent=self.topic_analyzer()
         )
 
     @task
     def research_task(self) -> Task:
         return Task(
             config=self.tasks_config['research_task'],
-            agent=self.researcher(),
             tools=[search_news, find_keywords],
-            context=[self.topic_analysis_task()]
         )
 
     @task
     def writing_task(self) -> Task:
         return Task(
             config=self.tasks_config['writing_task'],
-            agent=self.writer(),
-            context=[
-                self.topic_analysis_task(),
-                self.research_task()
-            ]
         )
 
     @task
     def seo_optimization_task(self) -> Task:
         return Task(
             config=self.tasks_config['seo_optimization_task'],
-            agent=self.seo_optimizer(),
             tools=[find_keywords],
-            context=[self.writing_task()]
         )
 
     # --- Crew Assembly ---
